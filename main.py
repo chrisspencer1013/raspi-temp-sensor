@@ -33,8 +33,12 @@ logging.info("""initializing...""")
 # BME280 temperature/pressure/humidity sensor
 bme280 = BME280()
 
+BACKLIGHT_LEVEL = 8
+
 # Create ST7735 LCD display class
-st7735 = ST7735.ST7735(port=0, cs=1, dc=9, backlight=12, rotation=270, spi_speed_hz=10000000)
+st7735 = ST7735.ST7735(
+    port=0, cs=1, dc=9, backlight=BACKLIGHT_LEVEL, rotation=90, spi_speed_hz=10000000
+)
 
 # Initialize display
 st7735.begin()
@@ -89,10 +93,25 @@ def update_display(temp, humidity):
 
 def main():
     try:
+        screen_on = True
+        last_toggle_ts = time.time()
         while True:
+            proximity = ltr559.get_proximity()
+
+            # If the proximity crosses the threshold, toggle screen
+            if proximity > 1500 and time.time() - last_toggle_ts > 0.5:
+                screen_on = not screen_on
+                last_toggle_ts = time.time()
+
             temp = get_adjusted_room_temp()
             humidity = bme280.get_humidity()
-            update_display(temp, humidity)
+
+            if screen_on:
+                st7735.set_backlight(BACKLIGHT_LEVEL)
+                update_display(temp, humidity)
+            else:
+                st7735.set_backlight(0)
+
             logging.info(f"temp: {temp}, humidity: {humidity}")
             time.sleep(3)
     except KeyboardInterrupt:
