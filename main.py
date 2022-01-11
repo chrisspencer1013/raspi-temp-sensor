@@ -72,7 +72,7 @@ def display_text(variable, data, unit):
     # Format the variable name and value
     message = "{}: {:.1f} {}".format(variable[:4], data, unit)
     logging.info(message)
-    draw.rectangle((0, 0, WIDTH, HEIGHT), (255, 255, 255))
+    draw.rectangle((0, 0, WIDTH, HEIGHT), (0, 45, 255))
     for i in range(len(colours)):
         # Convert the values to colours from red to blue
         colour = (1.0 - colours[i]) * 0.6
