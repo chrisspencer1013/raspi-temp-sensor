@@ -81,6 +81,7 @@ def get_adjusted_room_temp():
 
 
 def update_display(temp, humidity):
+    draw.rectangle((0, 0, WIDTH, HEIGHT), (255, 179, 255))
     draw.text((0, 0), f"Temp: {'%.1f' % temp}°F", font=font, fill=(0, 45, 255))
     draw.text((0, 25), f"Humidity: {'%.0f' % humidity}% ", font=font, fill=(0, 45, 255))
     st7735.display(img)
