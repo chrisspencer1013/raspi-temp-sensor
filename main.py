@@ -69,7 +69,7 @@ def get_adjusted_room_temp():
 
     # Smooth out with some averaging to decrease jitter
     global CPU_TEMPS
-    CPU_TEMPS = CPU_TEMPS[1:] + [CPU_TEMPS]
+    CPU_TEMPS = CPU_TEMPS[1:] + [cpu_temp]
     avg_cpu_temp = sum(CPU_TEMPS) / float(len(CPU_TEMPS))
 
     raw_temp = bme280.get_temperature()
