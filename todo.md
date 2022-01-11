@@ -1,11 +1,7 @@
 # Todo
 
-- Display all
+- [DONE] Display temp & humidity
+- [DONE] Use prox sensor to toggle display on/off
 
-  - temp
-  - humidity
-
-- Use prox sensor to toggle display on/off
-
-- Google docs logging
+- Google docs logging (batch up inserts)
 - figure out how to call api for smart outlet
