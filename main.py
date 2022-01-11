@@ -97,6 +97,7 @@ def main():
         last_toggle_ts = time.time()
         while True:
             proximity = ltr559.get_proximity()
+            logging.info
 
             # If the proximity crosses the threshold, toggle screen
             if proximity > 1500 and time.time() - last_toggle_ts > 0.5:
@@ -119,5 +120,6 @@ def main():
         sys.exit(0)
 
 
+st7735.set_backlight(0)
 if __name__ == "__main__":
     main()
