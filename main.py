@@ -68,7 +68,7 @@ def get_adjusted_room_temp():
     cpu_temp = get_cpu_temperature()
 
     # Smooth out with some averaging to decrease jitter
-    nonlocal CPU_TEMPS
+    global CPU_TEMPS
     CPU_TEMPS = CPU_TEMPS[1:] + [CPU_TEMPS]
     avg_cpu_temp = sum(CPU_TEMPS) / float(len(CPU_TEMPS))
 
