@@ -2,10 +2,8 @@
 
 - Display all
 
-  - Date and time
   - temp
   - humidity
-  - ip address?
 
 - Use prox sensor to toggle display on/off
 
