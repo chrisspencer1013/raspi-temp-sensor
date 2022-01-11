@@ -109,8 +109,8 @@ def get_adjusted_room_temp():
 
 
 def update_display(temp, humidity):
-    draw.text((0, 0), f"Temp: {temp}°F", font=font, fill=(0, 0, 0))
-    draw.text((0, 0), f"Humidity: {humidity}% ", font=font, fill=(0, 0, 0))
+    draw.text((0, 0), f"Temp: {temp}°F", font=font, fill=(0, 45, 255))
+    draw.text((0, 25), f"Humidity: {humidity}% ", font=font, fill=(0, 45, 255))
     st7735.display(img)
 
 
@@ -119,7 +119,7 @@ def update_display(temp, humidity):
 try:
     while True:
         time.sleep(3)
-        temp = get_adjusted_room_temp
+        temp = get_adjusted_room_temp()
         humidity = bme280.get_humidity()
         update_display(temp, humidity)
         logging.info(f"temp: {temp}, humidity: {humidity}")
