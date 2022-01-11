@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import time
+import logging
 import colorsys
 import os
 import sys
@@ -18,16 +19,13 @@ from PIL import Image
 from PIL import ImageDraw
 from PIL import ImageFont
 from fonts.ttf import RobotoMedium as UserFont
-import logging
 
 logging.basicConfig(
     format='%(asctime)s.%(msecs)03d %(levelname)-8s %(message)s',
     level=logging.INFO,
     datefmt='%Y-%m-%d %H:%M:%S')
 
-logging.info("""all-in-one.py - Displays readings from all of Enviro plus' sensors
-Press Ctrl+C to exit!
-""")
+logging.info("""initializing...""")
 
 # BME280 temperature/pressure/humidity sensor
 bme280 = BME280()
@@ -55,12 +53,6 @@ path = os.path.dirname(os.path.realpath(__file__))
 font_size = 20
 font = ImageFont.truetype(UserFont, font_size)
 
-message = ""
-
-# The position of the top bar
-top_pos = 25
-
-
 
 
 # Get the temperature of the CPU for compensation
@@ -69,35 +61,18 @@ def get_cpu_temperature():
     output, _error = process.communicate()
     return float(output[output.index('=') + 1:output.rindex("'")])
 
-
-
-# Tuning factor for compensation. Decrease this number to adjust the
-# temperature down, and increase to adjust up
-factor = 2.25
-
-cpu_temps = [get_cpu_temperature()] * 5
-
-delay = 0.5  # Debounce the proximity tap
-mode = 0  # The starting mode
-last_page = 0
-light = 1
-
-
-
-# Create a values dict to store the data
-variables = ["temperature",
-             "pressure",
-             "humidity",
-             "light"]
-
-values = {}
+CPU_TEMPS = [get_cpu_temperature()] * 5
 
 def get_adjusted_room_temp():   
+    # Tuning factor for compensation. Decrease this number to adjust the
+    # temperature down, and increase to adjust up
+    factor = 2.25
+
     cpu_temp = get_cpu_temperature()
 
     # Smooth out with some averaging to decrease jitter
-    cpu_temps = cpu_temps[1:] + [cpu_temp]
-    avg_cpu_temp = sum(cpu_temps) / float(len(cpu_temps))
+    nonlocal CPU_TEMPS = CPU_TEMPS[1:] + [CPU_TEMPS]
+    avg_cpu_temp = sum(CPU_TEMPS) / float(len(CPU_TEMPS))
 
     raw_temp = bme280.get_temperature()
 
@@ -113,15 +88,16 @@ def update_display(temp, humidity):
     draw.text((0, 25), f"Humidity: {humidity}% ", font=font, fill=(0, 45, 255))
     st7735.display(img)
 
+def main():
+    try:
+        while True:
+            temp = get_adjusted_room_temp()
+            humidity = bme280.get_humidity()
+            update_display(temp, humidity)
+            logging.info(f"temp: {temp}, humidity: {humidity}")
+            time.sleep(3)
+    except KeyboardInterrupt:
+        sys.exit(0)
 
-
-# The main loop
-try:
-    while True:
-        time.sleep(3)
-        temp = get_adjusted_room_temp()
-        humidity = bme280.get_humidity()
-        update_display(temp, humidity)
-        logging.info(f"temp: {temp}, humidity: {humidity}")
-except KeyboardInterrupt:
-    sys.exit(0)
+if __name__ == '__main__'
+    main()
