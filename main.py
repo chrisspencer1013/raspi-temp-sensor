@@ -100,6 +100,7 @@ def main():
 
             # If the proximity crosses the threshold, toggle screen
             if proximity > 1500 and time.time() - last_toggle_ts > 0.5:
+                logging.info("Toggle")
                 screen_on = not screen_on
                 last_toggle_ts = time.time()
 
