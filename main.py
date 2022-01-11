@@ -108,7 +108,7 @@ def get_adjusted_room_temp():
 
 
 
-def update_display(temp, humidity)
+def update_display(temp, humidity):
     draw.text((0, 0), f"Temp: {temp}°F", font=font, fill=(0, 0, 0))
     draw.text((0, 0), f"Humidity: {humidity}% ", font=font, fill=(0, 0, 0))
     st7735.display(img)
@@ -123,7 +123,5 @@ try:
         humidity = bme280.get_humidity()
         update_display(temp, humidity)
         logging.info(f"temp: {temp}, humidity: {humidity}")
-
-
 except KeyboardInterrupt:
     sys.exit(0)
